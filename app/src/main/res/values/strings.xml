@@ -2,4 +2,6 @@
     <string name="app_name">Joke2App</string>
     <string name="get_joke">Get Joke</string>
     <string name="show_favorite_joke">show favorite joke</string>
+    <string name="no_connection">No connection</string>
+    <string name="service_unavailable">Service unavailable</string>
 </resources>

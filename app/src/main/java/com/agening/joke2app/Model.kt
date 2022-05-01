@@ -1,23 +1,26 @@
 package com.agening.joke2app
 
-class TestModel() : Model<Any, Any> {
+class TestModel(resourceManager: ResourceManager) : Model {
 
-    private var callback: ResultCallback<Any, Any>? = null
-
+    private var callback: ResultCallback? = null
     private var count = 1
+    private val noConnection = NoConnection(resourceManager)
+    private val serviceUnavailable = ServiceUnavailable(resourceManager)
 
     override fun getJoke() {
         Thread {
             Thread.sleep(1000)
-            if (count % 2 == 0)
-                callback?.provideSuccess("success")
-            else
-                callback?.provideError("error")
+            when(count){
+                0->callback?.provideSuccess(BaseJoke("testText", "testPunchline"))
+                1->callback?.provideError(noConnection)
+                2->callback?.provideError(serviceUnavailable)
+            }
             count++
+            if (count==3) count = 0
         }.start()
     }
 
-    override fun init(callback: ResultCallback<Any, Any>) {
+    override fun init(callback: ResultCallback) {
         this.callback = callback
     }
 
@@ -27,18 +30,18 @@ class TestModel() : Model<Any, Any> {
 
 }
 
-interface Model<S, E> {
+interface Model {
 
     fun getJoke()
 
-    fun init(callback: ResultCallback<S, E>)
+    fun init(callback: ResultCallback)
 
     fun clear()
 }
 
-interface ResultCallback<S, E> {
+interface ResultCallback {
 
-    fun provideSuccess(data: S)
+    fun provideSuccess(data: BaseJoke)
 
-    fun provideError(error: E)
+    fun provideError(error: JokeFailure)
 }

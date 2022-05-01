@@ -1,6 +1,7 @@
 package com.agening.joke2app
 
 import android.app.Application
+import com.google.gson.Gson
 
 class JokeApp:Application() {
 
@@ -8,7 +9,7 @@ class JokeApp:Application() {
 
     override fun onCreate() {
         super.onCreate()
-        viewModel = ViewModel(TestModel())
+        viewModel = ViewModel(BaseModel(BaseJokeService(Gson()), BaseResourceManager(this)))
     }
 
 }
